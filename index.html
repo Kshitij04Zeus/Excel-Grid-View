@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel Grid</title>
+</head>
+<body class="bg-slate-50 text-slate-900 overflow-hidden w-screen h-screen">
+    <div class="flex flex-col w-full h-full select-none font-sans">
+        
+        <div class="flex items-center justify-center px-4 py-2 border-b border-slate-200 bg-white h-12">
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-1.5 text-green-500 text-center font-bold text-lg">
+                    Excel Grid
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2 px-4 py-1.5 border-b border-slate-200 bg-slate-50 h-9 font-mono text-xs">
+            <div id="addressBox" class="flex items-center justify-center px-2 py-1 border border-slate-300 bg-white rounded w-16 text-center text-slate-700 font-semibold h-full min-w-[50px]">
+                -
+            </div>
+            <div class="text-slate-400 font-light select-none text-base">|</div>
+            <div class="flex items-center justify-center text-slate-500 font-semibold px-1 select-none">
+                fx
+            </div>
+            <input id="formulaInput" type="text" class="flex-1 px-2 py-1 border border-slate-300 bg-white rounded text-slate-800 outline-none focus:border-[#107c41] h-full" placeholder="" />
+        </div>
+
+        <div class="flex-1 relative overflow-hidden bg-slate-100">
+            <canvas id="gridCanvas" class="absolute inset-0 block w-full h-full"></canvas>
+        </div>
+
+        <div id="statusBar" class="flex items-center justify-between px-4 py-1 text-xs border-t border-slate-200 bg-slate-100 text-slate-600 h-6 select-none font-sans">
+            <div id="statusMessage" class="font-medium text-slate-500">Ready</div>
+            <div id="statsContainer" class="flex gap-4 font-medium text-slate-700">
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html> 
