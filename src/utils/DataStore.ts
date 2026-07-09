@@ -97,8 +97,8 @@ export class DataStore {
         if (!record) return "";
         switch (column) {
             case 0: return record.id.toString();
-            case 1: return record.firstName;
-            case 2: return record.lastName;
+            case 1: return record.firstName!;
+            case 2: return record.lastName!;
             case 3: return record.Age.toString();
             case 4: return record.Salary.toString();
             default: return "";

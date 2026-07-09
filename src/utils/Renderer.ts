@@ -21,10 +21,10 @@ export class Renderer {
         const visibleCols = this.viewport.getVisibleColumns(this.canvas.width);
 
         this.drawGridCells(visibleRows, visibleCols, scrollX, scrollY);
+        this.drawSelection();
         this.drawColumnHeaders(visibleCols, scrollX);
         this.drawRowHeaders(visibleRows, scrollY);
         this.drawTopLeftCorner();
-        this.drawSelection();
     }
 
     private drawGridCells(

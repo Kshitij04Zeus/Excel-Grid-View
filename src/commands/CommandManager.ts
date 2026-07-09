@@ -1,6 +1,6 @@
 import type { ICommand } from "./ICommand";
 
-export class CommandHistory {
+export class CommandManager {
     private undoStack: ICommand[] = [];
     private redoStack: ICommand[] = [];
 

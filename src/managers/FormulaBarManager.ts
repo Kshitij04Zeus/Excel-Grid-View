@@ -1,6 +1,6 @@
 import type { DataStore } from "../utils/DataStore";
 import type { SelectionManager } from "../managers/SelectionManager";
-import type { CommandHistory } from "../commands/CommandManager";
+import type { CommandManager } from "../commands/CommandManager";
 import { EditCellCommand } from "../commands/EditCellCommand";
 import { StatsCalculator } from "../utils/StatsCalculator";
 import { FormulaEngine } from "../utils/FormulaEngine";
@@ -17,7 +17,7 @@ export class FormulaBarManager {
     constructor(
         private readonly datastore: DataStore,
         private readonly selectionManager: SelectionManager,
-        private readonly commandHistory: CommandHistory,
+        private readonly commandManager: CommandManager,
         private readonly onRenderRequired: () => void
     ) {
         this.formulaEngine = new FormulaEngine(this.datastore);
@@ -82,7 +82,7 @@ export class FormulaBarManager {
                 newValue,
                 () => this.onRenderRequired()
             );
-            this.commandHistory.pushExecutedCommand(command);
+            this.commandManager.pushExecutedCommand(command);
         }
 
         this.formulaEditingRow = -1;

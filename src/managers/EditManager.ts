@@ -1,6 +1,6 @@
 import { Cell } from "../models/Cell";
 import { DataStore } from "../utils/DataStore";
-import { CommandHistory } from "../commands/CommandManager";
+import { CommandManager } from "../commands/CommandManager";
 import { EditCellCommand } from "../commands/EditCellCommand";
 import { Constants } from "../utils/Constants";
  
@@ -14,7 +14,7 @@ export class EditManager
     constructor(
         private readonly container: HTMLElement,
         private readonly datastore: DataStore,
-        private readonly commandHistory: CommandHistory,
+        private readonly commandManager: CommandManager,
         private readonly onValueChanged: () => void
     ) 
     {
@@ -88,7 +88,7 @@ export class EditManager
                 newValue,
                 this.onValueChanged
             );
-            this.commandHistory.pushExecutedCommand(command);
+            this.commandManager.pushExecutedCommand(command);
             this.datastore.setCellValue(this.editingRow, this.editingColumn, newValue);
         }
         this.hide(); 

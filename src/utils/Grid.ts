@@ -6,8 +6,9 @@ import { SelectionManager } from "../managers/SelectionManager";
 import { EditManager } from "../managers/EditManager";
 import { ResizeManager } from "../managers/ResizeManager";
 import { ResizeState, ResizeType } from "../models/ResizeState";
-import { CommandHistory } from "../commands/CommandManager";
+import { CommandManager } from "../commands/CommandManager";
 import { FormulaBarManager } from "../managers/FormulaBarManager";
+import { KeyboardManager } from "../managers/KeyboardManager";
 
 export class Grid {
     private canvas: HTMLCanvasElement;
@@ -16,14 +17,15 @@ export class Grid {
     private readonly selectionManager: SelectionManager;
     private editManager: EditManager;
     private resizeManager: ResizeManager;
-    private commandHistory: CommandHistory;
+    private commandManager: CommandManager;
+    private keyboardManager : KeyboardManager
     private formulaBarManager: FormulaBarManager;
 
     constructor(private datastore: DataStore, private viewport: ViewPort, canvasElement: HTMLCanvasElement) {
         this.canvas = canvasElement;
-        this.commandHistory = new CommandHistory();
+        this.commandManager = new CommandManager();
         const canvasContainer = canvasElement.parentElement || document.body;
-        this.editManager = new EditManager(canvasContainer, this.datastore, this.commandHistory, () => this.render());
+        this.editManager = new EditManager(canvasContainer, this.datastore, this.commandManager, () => this.render());
         this.resizeManager = new ResizeManager(this.datastore);
         const context = this.canvas.getContext("2d");
         if (!context) {
@@ -35,9 +37,18 @@ export class Grid {
         this.formulaBarManager = new FormulaBarManager(
             this.datastore,
             this.selectionManager,
-            this.commandHistory,
+            this.commandManager,
             () => this.render()
         )
+
+        this.keyboardManager = new KeyboardManager(
+            this.selectionManager,
+            this.commandManager, 
+            this.datastore,
+            this.viewport,
+            this.canvas,
+            () => this.render()  
+        );
         this.initEvents();
         this.resizeCanvas();
     }
@@ -50,28 +61,6 @@ export class Grid {
 
     private initEvents(): void {
         window.addEventListener("resize", () => this.resizeCanvas());
-
-        window.addEventListener("keydown", (event: KeyboardEvent) => {
-            if (document.activeElement?.tagName === "INPUT") {
-                return;
-            }
-
-            if ((event.ctrlKey || event.metaKey) && !event.shiftKey) {
-                if (event.key.toLowerCase() === "z") {
-                    event.preventDefault();
-                    this.commandHistory.undo();
-                    this.render();
-                } else if (event.key.toLowerCase() === "y") {
-                    event.preventDefault();
-                    this.commandHistory.redo();
-                    this.render();
-                }
-            } else if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === "z") {
-                event.preventDefault();
-                this.commandHistory.redo();
-                this.render();
-            }
-        });
 
         this.canvas.addEventListener("wheel", (event: WheelEvent) => {
             event.preventDefault();
@@ -194,7 +183,7 @@ export class Grid {
         this.canvas.addEventListener("mouseup", () => {
             this.selectionManager.finishSelection();
             this.resizeManager.finishResize((cmd) => {
-                this.commandHistory.pushExecutedCommand(cmd);
+                this.commandManager.pushExecutedCommand(cmd);
             });
             this.canvas.style.cursor = "default";
             this.render();
