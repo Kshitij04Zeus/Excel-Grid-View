@@ -42,10 +42,14 @@ export class ViewPort {
         }
 
         let end = start;
-        let visibleHeight = 0;
-        while (end < totalRows && visibleHeight < canvasHeight + 100) {
-            visibleHeight += this.datastore.getRowHeight(end);
+        const maxVisibleY = scrollY + canvasHeight + 100;
+
+        while (end < totalRows) {
+            const bottomY = this.datastore.getRowOffset(end) + this.datastore.getRowHeight(end);
             end++;
+            if (bottomY > maxVisibleY) {
+                break;
+            }
         }
 
         return { start, end };
@@ -72,10 +76,14 @@ export class ViewPort {
         }
 
         let end = start;
-        let visibleWidth = 0;
-        while (end < totalCols && visibleWidth < canvasWidth + 100) {
-            visibleWidth += this.datastore.getColumnWidth(end);
+        const maxVisibleX = scrollX + canvasWidth + 100;
+
+        while (end < totalCols) {
+            const rightX = this.datastore.getColumnOffset(end) + this.datastore.getColumnWidth(end);
             end++;
+            if (rightX > maxVisibleX) {
+                break;
+            }
         }
 
         return { start, end };

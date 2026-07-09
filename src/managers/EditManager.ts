@@ -19,16 +19,8 @@ export class EditManager
     ) 
     {
         this.inputElement = document.createElement("input"); 
-        this.inputElement.type = "text"; 
-        this.inputElement.style.position = "absolute"; 
-        this.inputElement.style.display = "none"; 
-        this.inputElement.style.border = "2px solid #107c41"; 
-        this.inputElement.style.outline = "none"; 
-        this.inputElement.style.backgroundColor = "#ffffff";
-        this.inputElement.style.boxSizing = "border-box";
-        this.inputElement.style.padding = "0 5px"; 
-        this.inputElement.style.fontFamily = "Arial";
-        this.inputElement.style.fontSize = "13px"; 
+        
+        Object.assign(this.inputElement.style, Constants.CELL_INPUT_STYLES); 
  
         this.container.appendChild(this.inputElement); 
         this.registerEvents();
