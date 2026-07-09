@@ -3,7 +3,7 @@ import type { DataStore } from "../utils/DataStore";
 import { ResizeState, ResizeType } from "../models/ResizeState";
 import { ResizeColumnCommand } from "../commands/ResizeColumnCommand";
 import { ResizeRowCommand } from "../commands/ResizeRowCommand";
-import type { Command } from "../commands/Command";
+import type { ICommand } from "../commands/ICommand";
 
 export class ResizeManager {
     private readonly state = new ResizeState();
@@ -110,7 +110,7 @@ export class ResizeManager {
     }
 
 
-    public finishResize(onCommandCreated?: (cmd: Command) => void): void {
+    public finishResize(onCommandCreated?: (cmd: ICommand) => void): void {
         if (!this.state.isResizing || this.state.index === -1) {
             return;
         }

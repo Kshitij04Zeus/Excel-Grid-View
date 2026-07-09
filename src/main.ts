@@ -3,7 +3,8 @@ import { DataStore } from './utils/DataStore';
 import { Grid } from './utils/Grid';
 import { ViewPort } from './utils/ViewPort';
 import type { Employee } from "./models/Employee";
-import employeeData from "./employees.json";
+import { generateRecords } from './utils/generate-data';
+// import employeeData from "./employees.json";
 
 
 window.addEventListener("DOMContentLoaded",()=>{
@@ -11,7 +12,7 @@ window.addEventListener("DOMContentLoaded",()=>{
   if(!canvas) throw new Error("Grid canvas is not found");
 
   const datastore=new DataStore();
-  const records:Employee[]=employeeData as Employee[];
+  const records:Employee[]=generateRecords(50000);
   datastore.setRecords(records);
   const viewport=new ViewPort(datastore);
   new Grid(datastore,viewport,canvas);

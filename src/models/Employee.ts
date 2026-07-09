@@ -1,8 +1,8 @@
 export interface Employee
 {
     id:number,
-    firstName:string,
-    lastName:string,
+    firstName:string|undefined,
+    lastName:string|undefined,
     Age:number,
     Salary:number
 }

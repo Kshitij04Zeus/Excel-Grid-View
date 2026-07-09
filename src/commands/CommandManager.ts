@@ -1,16 +1,16 @@
-import type { Command } from "./Command";
+import type { ICommand } from "./ICommand";
 
 export class CommandHistory {
-    private undoStack: Command[] = [];
-    private redoStack: Command[] = [];
+    private undoStack: ICommand[] = [];
+    private redoStack: ICommand[] = [];
 
-    public executeCommand(command: Command): void {
+    public executeCommand(command: ICommand): void {
         command.execute();
         this.undoStack.push(command);
         this.redoStack = []; // Clear redo stack on new command
     }
 
-    public pushExecutedCommand(command: Command): void {
+    public pushExecutedCommand(command: ICommand): void {
         this.undoStack.push(command);
         this.redoStack = [];
     }

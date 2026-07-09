@@ -1,6 +1,6 @@
 import { Cell } from "../models/Cell";
 import { DataStore } from "../utils/DataStore";
-import { CommandHistory } from "../commands/CommandHistory";
+import { CommandHistory } from "../commands/CommandManager";
 import { EditCellCommand } from "../commands/EditCellCommand";
 import { Constants } from "../utils/Constants";
  

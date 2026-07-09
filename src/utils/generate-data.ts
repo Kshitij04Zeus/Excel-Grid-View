@@ -1,11 +1,11 @@
-import fs from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+// import fs from 'fs';
+// import { fileURLToPath } from 'url';
+// import { dirname, join } from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
 
-function generateRecords(count) {
+export function generateRecords(count:number) {
     const firstNames = ['Raj', 'Amit', 'Neha', 'Priya', 'Vikram', 'Siddharth', 'Ananya', 'Rohan', 'Sneha', 'Rahul', 'Arjun', 'Deepika', 'Karan', 'Divya', 'Yash', 'Meera', 'Aditya', 'Kriti', 'Gaurav', 'Pooja'];
     const lastNames = ['Solanki', 'Sharma', 'Verma', 'Patel', 'Joshi', 'Gupta', 'Mehta', 'Mishra', 'Singh', 'Kumar', 'Reddy', 'Nair', 'Choudhury', 'Rao', 'Shah', 'Kapoor', 'Malhotra', 'Joshi', 'Bose', 'Das'];
     
@@ -30,12 +30,12 @@ function generateRecords(count) {
 }
 
 const TOTAL_RECORDS = 50000;
-const OUTPUT_FILE = join(__dirname, 'employees.json');
+// const OUTPUT_FILE = join(__dirname, 'employees.json');
 
-console.log(`Generating ${TOTAL_RECORDS} employee records...`);
-const data = generateRecords(TOTAL_RECORDS);
+// console.log(`Generating ${TOTAL_RECORDS} employee records...`);
+// const data = generateRecords(TOTAL_RECORDS);
 
-console.log(`Writing data to ${OUTPUT_FILE}...`);
-fs.writeFileSync(OUTPUT_FILE, JSON.stringify(data, null, 2), 'utf-8');
+// console.log(`Writing data to ${OUTPUT_FILE}...`);
+// fs.writeFileSync(OUTPUT_FILE, JSON.stringify(data, null, 2), 'utf-8');
 
-console.log('Generation complete');
+// console.log('Generation complete');

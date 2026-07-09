@@ -6,7 +6,7 @@ import { SelectionManager } from "../managers/SelectionManager";
 import { EditManager } from "../managers/EditManager";
 import { ResizeManager } from "../managers/ResizeManager";
 import { ResizeState, ResizeType } from "../models/ResizeState";
-import { CommandHistory } from "../commands/CommandHistory";
+import { CommandHistory } from "../commands/CommandManager";
 import { FormulaBarManager } from "../managers/FormulaBarManager";
 
 export class Grid {

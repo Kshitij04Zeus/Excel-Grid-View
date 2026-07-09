@@ -1,7 +1,7 @@
-import type { Command } from "./Command";
+import type { ICommand } from "./ICommand";
 import type { DataStore } from "../utils/DataStore";
 
-export class ResizeRowCommand implements Command {
+export class ResizeRowCommand implements ICommand {
     constructor(
         private datastore: DataStore,
         private row: number,

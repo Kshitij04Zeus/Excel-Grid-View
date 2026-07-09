@@ -1,6 +1,6 @@
 import type { DataStore } from "../utils/DataStore";
 import type { SelectionManager } from "../managers/SelectionManager";
-import type { CommandHistory } from "../commands/CommandHistory";
+import type { CommandHistory } from "../commands/CommandManager";
 import { EditCellCommand } from "../commands/EditCellCommand";
 import { StatsCalculator } from "../utils/StatsCalculator";
 import { FormulaEngine } from "../utils/FormulaEngine";
