@@ -1,6 +1,7 @@
+import type { IFormulaEngine } from "../interfaces/IFormulaEngine";
 import { DataStore } from "./DataStore";
 
-export class FormulaEngine {
+export class FormulaEngine implements IFormulaEngine{
   private dataStore: DataStore;
 
   constructor(dataStore: DataStore) {

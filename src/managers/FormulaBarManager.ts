@@ -2,8 +2,8 @@ import type { DataStore } from "../utils/DataStore";
 import type { SelectionManager } from "../managers/SelectionManager";
 import type { CommandManager } from "../commands/CommandManager";
 import { EditCellCommand } from "../commands/EditCellCommand";
-import { StatsCalculator } from "../utils/StatsCalculator";
 import { FormulaEngine } from "../utils/FormulaEngine";
+import type { IFormulaEngine } from "../interfaces/IFormulaEngine";
 
 export class FormulaBarManager {
     private addressBox!: HTMLDivElement;
@@ -12,7 +12,7 @@ export class FormulaBarManager {
     private formulaEditingOldValue: string | null = null;
     private formulaEditingRow = -1;
     private formulaEditingCol = -1;
-    private formulaEngine: FormulaEngine;
+    private formulaEngine: IFormulaEngine;
 
     constructor(
         private readonly datastore: DataStore,
@@ -119,22 +119,6 @@ export class FormulaBarManager {
         } else {
             this.addressBox.textContent = "-";
             this.formulaInput.value = "";
-        }
-
-        const stats = StatsCalculator.calculate(selection, this.datastore);
-        const statsContainer = document.getElementById("statsContainer");
-        if (statsContainer) {
-            if (stats) {
-                statsContainer.innerHTML = `
-                    <span class="mr-3">Average: <strong class="text-slate-800">${StatsCalculator.formatNumber(stats.average)}</strong></span>
-                    <span class="mr-3">Count: <strong class="text-slate-800">${stats.count}</strong></span>
-                    <span class="mr-3">Min: <strong class="text-slate-800">${StatsCalculator.formatNumber(stats.min)}</strong></span>
-                    <span class="mr-3">Max: <strong class="text-slate-800">${StatsCalculator.formatNumber(stats.max)}</strong></span>
-                    <span>Sum: <strong class="text-slate-800">${StatsCalculator.formatNumber(stats.sum)}</strong></span>
-                `;
-            } else {
-                statsContainer.innerHTML = "";
-            }
         }
     }   
 }
