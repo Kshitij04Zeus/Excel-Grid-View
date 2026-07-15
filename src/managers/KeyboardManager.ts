@@ -18,38 +18,66 @@ export class KeyboardManager {
 
     private handleKeyDown(event: KeyboardEvent): void {
         if (document.activeElement?.tagName === "INPUT") {
-                return;
-            }
+            return;
+        }
         if ((event.ctrlKey || event.metaKey) && !event.shiftKey) {
-                if (event.key.toLowerCase() === "z") {
-                    event.preventDefault();
-                    this.commandManager.undo();
-                    this.render();
-                } else if (event.key.toLowerCase() === "y") {
-                    event.preventDefault();
-                    this.commandManager.redo();
-                    this.render();
-                }
-            } else if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === "z") {
+            if (event.key.toLowerCase() === "z") {
+                event.preventDefault();
+                this.commandManager.undo();
+                this.render();
+            } else if (event.key.toLowerCase() === "y") {
                 event.preventDefault();
                 this.commandManager.redo();
                 this.render();
             }
+        } else if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === "z") {
+            event.preventDefault();
+            this.commandManager.redo();
+            this.render();
+        }
 
         const range = this.selection.getRange();
         if (!range) return;
 
         let row = range.startRow;
         let column = range.startColumn;
+        let endRow = range.endRow;
+        let endCol = range.endColumn;
 
         // console.log(event.key);
         switch (event.key) {
             case "ArrowUp":
-                row = Math.max(0, row - 1);
+                if (event.shiftKey) endRow = Math.max(0, endRow - 1);
+                else {
+                    row = Math.max(0, row - 1);
+                    endRow = row;
+                }
                 break;
 
             case "ArrowDown":
-                row = Math.min(Constants.TOTAL_ROWS - 1, row + 1);
+                if (event.shiftKey) endRow = Math.min(Constants.TOTAL_ROWS - 1, endRow + 1);
+                else {
+                    row = Math.min(Constants.TOTAL_ROWS - 1, row + 1);
+                    endRow = row;
+                }
+                break;
+
+            case "ArrowLeft":
+                if (event.shiftKey) endCol = Math.max(0, endCol - 1);
+                else 
+                {
+                    column = Math.max(0, column - 1);
+                    endCol=column;
+                }
+                break;
+
+            case "ArrowRight":
+                if (event.shiftKey) endCol = Math.min(Constants.TOTAL_COLUMNS - 1, endCol + 1);
+                else
+                {
+                    column = Math.min(Constants.TOTAL_COLUMNS - 1, column + 1);
+                    endCol=column;
+                }
                 break;
 
             case "Enter":
@@ -59,14 +87,6 @@ export class KeyboardManager {
                 else {
                     row = Math.min(Constants.TOTAL_ROWS - 1, row + 1);
                 }
-                break;
-
-            case "ArrowLeft":
-                column = Math.max(0, column - 1);
-                break;
-
-            case "ArrowRight":
-                column = Math.min(Constants.TOTAL_COLUMNS - 1, column + 1);
                 break;
 
             case "Tab":
@@ -81,9 +101,14 @@ export class KeyboardManager {
         }
 
         event.preventDefault();
+
         this.selection.startSelection(row, column);
+        this.selection.updateSelection(endRow, endCol);
         this.selection.finishSelection();
-        this.scrollIntoView(row, column);
+
+        const targetRow = event.shiftKey ? endRow : row;
+        const targetCol = event.shiftKey ? endCol : column;
+        this.scrollIntoView(targetRow, targetCol);
         this.render();
     }
 
