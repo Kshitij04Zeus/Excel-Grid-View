@@ -7,6 +7,7 @@ import type { DataStore } from "../utils/DataStore";
 import type { CoordinateManager } from "./CoordinateManager";
 import { Constants } from "../utils/Constants";
 import { ResizeType } from "../models/ResizeState";
+import type { ScrollBarManager } from "./ScrollBarManager";
 
 export class MouseManager {
     constructor(
@@ -18,6 +19,7 @@ export class MouseManager {
         private readonly editManager: EditManager,
         private readonly commandManager: CommandManager,
         private readonly coordManager: CoordinateManager,
+        private readonly scrollBarManager:ScrollBarManager,
         private readonly render: () => void
     ) {
         this.initEvents();
@@ -48,6 +50,11 @@ export class MouseManager {
     }
 
     private handleMouseDown(event: MouseEvent): void {
+        if(this.scrollBarManager.mouseDown(event.offsetX,event.offsetY))
+        {
+            this.render();
+            return;
+        }
         const resizeColumn = this.resizeManager.detectColumnResize(
             event.offsetX,
             this.viewport.getScrollX()
@@ -99,6 +106,12 @@ export class MouseManager {
     }
 
     private handleMouseMove(event: MouseEvent): void {
+        if(this.scrollBarManager.isDragging())
+        {
+            this.scrollBarManager.mouseMove(event.offsetX,event.offsetY);
+            this.render();
+            return;
+        }
         if (this.resizeManager.isResizing()) {
             if (this.resizeManager.getState().type === ResizeType.Column) {
                 this.canvas.style.cursor = "ew-resize";
@@ -149,6 +162,7 @@ export class MouseManager {
     }
 
     private handleMouseUp(): void {
+        this.scrollBarManager.mouseUp();
         this.selectionManager.finishSelection();
         this.resizeManager.finishResize((cmd) => {
             this.commandManager.pushExecutedCommand(cmd);

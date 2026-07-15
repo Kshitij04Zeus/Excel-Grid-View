@@ -5,6 +5,16 @@ export class Constants {
     static readonly COLUMN_WIDTH = 120;
     static readonly HEADER_HEIGHT = 30;
     static readonly HEADER_WIDTH = 60;
+    static readonly SCROLLBAR_SIZE = 14;
+
+    static readonly SCROLLBAR_TRACK_COLOR = "#f1f3f4";
+
+    static readonly SCROLLBAR_THUMB_COLOR = "#c1c7cd";
+
+    static readonly SCROLLBAR_THUMB_HOVER = "#9aa0a6";
+
+    static readonly MIN_SCROLLBAR_THUMB_SIZE = 35;
+    
     static readonly headers = ["ID", "First Name", "Last Name", "Age", "Salary"];
 
     static readonly CELL_INPUT_STYLES = {

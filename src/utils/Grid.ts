@@ -10,6 +10,7 @@ import { KeyboardManager } from "../managers/KeyboardManager";
 import { CoordinateManager } from "../managers/CoordinateManager";
 import { MouseManager } from "../managers/MouseManager";
 import { StatusBarManager } from "../managers/StatusBarManager";
+import { ScrollBarManager } from "../managers/ScrollBarManager";
 
 export class Grid {
     private canvas: HTMLCanvasElement;
@@ -24,6 +25,7 @@ export class Grid {
     private coordinateManager: CoordinateManager;
     private mouseManager: MouseManager;
     private statusBarManager:StatusBarManager;
+    private scrollBarManager:ScrollBarManager;
 
     constructor(private datastore: DataStore, private viewport: ViewPort, canvasElement: HTMLCanvasElement) {
         this.canvas = canvasElement;
@@ -38,6 +40,7 @@ export class Grid {
         this.ctx = context;
         this.selectionManager = new SelectionManager();
         this.renderer = new Renderer(this.ctx, this.canvas, this.datastore, this.viewport, this.selectionManager);
+        this.scrollBarManager=new ScrollBarManager(this.canvas,this.ctx,this.datastore,this.viewport);
         this.formulaBarManager = new FormulaBarManager(
             this.datastore,
             this.selectionManager,
@@ -65,6 +68,7 @@ export class Grid {
             this.editManager,
             this.commandManager,
             this.coordinateManager,
+            this.scrollBarManager,
             () => this.render());
 
         this.statusBarManager = new StatusBarManager(
@@ -83,6 +87,7 @@ export class Grid {
 
     public render(): void {
         this.renderer.render();
+        this.scrollBarManager.draw();
         this.formulaBarManager.updateUI();
         this.statusBarManager.updateUI(); 
     }
