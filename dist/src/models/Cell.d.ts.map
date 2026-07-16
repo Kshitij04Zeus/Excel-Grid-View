@@ -1,0 +1,1 @@
+{"version":3,"file":"Cell.d.ts","sourceRoot":"","sources":["../../../src/src/models/Cell.ts"],"names":[],"mappings":"AAAA,qBAAa,IAAI;IAEM,GAAG,EAAC,MAAM;IAAQ,MAAM,EAAC,MAAM;IAAQ,KAAK,EAAC,MAAM,GAAG,MAAM,GAAE,IAAI;gBAAlE,GAAG,EAAC,MAAM,EAAQ,MAAM,EAAC,MAAM,EAAQ,KAAK,GAAC,MAAM,GAAG,MAAM,GAAE,IAAS;CAI7F"}

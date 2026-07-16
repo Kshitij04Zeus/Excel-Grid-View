@@ -1,0 +1,1 @@
+{"version":3,"file":"Selection.js","sourceRoot":"","sources":["../../../src/src/models/Selection.ts"],"names":[],"mappings":"AAGA,MAAM,OAAO,SAAS;IAEC;IAAoC;IAAkC;IAC9E;IADX,YAAmB,aAAuB,IAAI,EAAS,QAAqB,IAAI,EAAS,cAAmB,CAAC,CAAC,EACnG,iBAAsB,CAAC,CAAC;QADhB,eAAU,GAAV,UAAU,CAAiB;QAAS,UAAK,GAAL,KAAK,CAAoB;QAAS,gBAAW,GAAX,WAAW,CAAU;QACnG,mBAAc,GAAd,cAAc,CAAU;IAInC,CAAC;CACJ"}
