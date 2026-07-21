@@ -11,7 +11,7 @@ export class ScrollMouseHandler implements IMouseHandler {
         private viewport: ViewPort,
         private editManager: EditManager,
         private render: () => void
-    ) {}
+    ) { }
 
     onWheel(event: WheelEvent): boolean {
         event.preventDefault();

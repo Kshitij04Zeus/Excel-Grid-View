@@ -23,11 +23,11 @@ export class EditMouseHandler implements IMouseHandler {
         const left = this.datastore.getColumnOffset(column) - this.viewport.getScrollX();
         const top = this.datastore.getRowOffset(row) - this.viewport.getScrollY();
         this.editManager.startEditing(
-            row, 
-            column, 
-            left, 
-            top, 
-            this.datastore.getColumnWidth(column), 
+            row,
+            column,
+            left,
+            top,
+            this.datastore.getColumnWidth(column),
             this.datastore.getRowHeight(row)
         );
         return true;

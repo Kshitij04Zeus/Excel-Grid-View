@@ -5,9 +5,9 @@ export class ScrollBarMouseHandler implements IMouseHandler {
     constructor(
         private scrollBarManager: ScrollBarManager,
         private render: () => void
-    ) {}
+    ) { }
 
-    onMouseDown(event: MouseEvent): boolean {
+    onMouseDown(event: PointerEvent): boolean {
         if (this.scrollBarManager.mouseDown(event.offsetX, event.offsetY)) {
             this.render();
             return true;
@@ -15,22 +15,15 @@ export class ScrollBarMouseHandler implements IMouseHandler {
         return false;
     }
 
-    onMouseMove(event: MouseEvent): boolean {
-        if (this.scrollBarManager.isDragging()) {
-            this.scrollBarManager.mouseMove(event.offsetX, event.offsetY);
-            this.render();
-            return true;
-        }
-        return false;
+    onMouseMove(event: PointerEvent): boolean {
+        this.scrollBarManager.mouseMove(event.offsetX, event.offsetY);
+        this.render();
+        return true;
     }
 
-    onMouseUp(event: MouseEvent): boolean {
-        if (this.scrollBarManager.isDragging()) {
-            this.scrollBarManager.mouseUp();
-            this.render();
-            return true;
-        }
+    onMouseUp(event: PointerEvent): void {
         this.scrollBarManager.mouseUp();
-        return false;
+        this.render();
     }
 }
+

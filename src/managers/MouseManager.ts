@@ -9,12 +9,16 @@ import type { ScrollBarManager } from "./ScrollBarManager";
 import type { IMouseHandler } from "../interfaces/IMouseHandler";
 import { ScrollBarMouseHandler } from "./mouseHandlers/ScrollBarMouseHandler";
 import { ScrollMouseHandler } from "./mouseHandlers/ScrollMouseHandler";
-import { ResizeMouseHandler } from "./mouseHandlers/ResizeMouseHandler";
-import { SelectionMouseHandler } from "./mouseHandlers/SelectionMouseHandler";
 import { EditMouseHandler } from "./mouseHandlers/EditMouseHandler";
+import { ResizeColumnHandler } from "./mouseHandlers/ResizeColumnHandler";
+import { SelectionRowHandler } from "./mouseHandlers/SelectionRowHandler";
+import { SelectionColumnHandler } from "./mouseHandlers/SelectionColumnHandler";
+import { ResizeRowHandler } from "./mouseHandlers/ResizeRowHandler";
+import { SelectionCellHandler } from "./mouseHandlers/SelectionCellHandler";
 
 export class MouseManager {
     private handlers: IMouseHandler[] = [];
+    private activeHandler: IMouseHandler | null = null;
 
     constructor(
         private readonly canvas: HTMLCanvasElement,
@@ -36,17 +40,20 @@ export class MouseManager {
         this.handlers = [
             new ScrollBarMouseHandler(this.scrollBarManager, this.render),
             new ScrollMouseHandler(this.canvas, this.datastore, this.viewport, this.editManager, this.render),
-            new ResizeMouseHandler(this.canvas, this.resizeManager, this.commandManager, this.viewport, this.render),
-            new SelectionMouseHandler(this.selectionManager, this.coordManager, this.render),
+            new ResizeColumnHandler(this.canvas, this.resizeManager, this.commandManager, this.viewport, this.render),
+            new ResizeRowHandler(this.canvas, this.resizeManager, this.commandManager, this.viewport, this.render),
+            new SelectionRowHandler(this.selectionManager, this.coordManager, this.render),
+            new SelectionColumnHandler(this.selectionManager, this.coordManager, this.render),
+            new SelectionCellHandler(this.selectionManager, this.coordManager, this.render),
             new EditMouseHandler(this.datastore, this.viewport, this.coordManager, this.editManager)
         ];
     }
 
     private initEvents(): void {
         this.canvas.addEventListener("wheel", this.handleWheel.bind(this), { passive: false });
-        this.canvas.addEventListener("mousedown", this.handleMouseDown.bind(this));
-        this.canvas.addEventListener("mousemove", this.handleMouseMove.bind(this));
-        this.canvas.addEventListener("mouseup", this.handleMouseUp.bind(this));
+        this.canvas.addEventListener("pointerdown", this.handlePointerDown.bind(this));
+        this.canvas.addEventListener("pointermove", this.handlePointerMove.bind(this));
+        this.canvas.addEventListener("pointerup", this.handlePointerUp.bind(this));
         this.canvas.addEventListener("dblclick", this.handleDblClick.bind(this));
     }
 
@@ -56,21 +63,34 @@ export class MouseManager {
         }
     }
 
-    private handleMouseDown(event: MouseEvent): void {
+    private handlePointerDown(event: PointerEvent): void {
         for (const handler of this.handlers) {
-            if (handler.onMouseDown && handler.onMouseDown(event)) break;
+            if (handler.onMouseDown && handler.onMouseDown(event)) {
+                this.activeHandler = handler;
+                this.canvas.setPointerCapture(event.pointerId);
+                break;
+            }
         }
     }
 
-    private handleMouseMove(event: MouseEvent): void {
+    private handlePointerMove(event: PointerEvent): void {
+        if(this.activeHandler)
+        {
+            this.activeHandler.onMouseMove?.(event);
+            return;
+        }
+        this.canvas.style.cursor="default";
         for (const handler of this.handlers) {
-            if (handler.onMouseMove && handler.onMouseMove(event)) break;
+            handler.onHover?.(event);
         }
     }
 
-    private handleMouseUp(event: MouseEvent): void {
-        for (const handler of this.handlers) {
-            if (handler.onMouseUp && handler.onMouseUp(event)) break;
+    private handlePointerUp(event: PointerEvent): void {
+        if(this.activeHandler)
+        {
+            this.activeHandler.onMouseUp?.(event);
+            this.activeHandler=null;
+            this.canvas.releasePointerCapture(event.pointerId);
         }
     }
 

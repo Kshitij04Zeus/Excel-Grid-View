@@ -1,7 +1,8 @@
 export interface IMouseHandler {
-    onMouseDown?(event: MouseEvent): boolean;
-    onMouseMove?(event: MouseEvent): boolean;
-    onMouseUp?(event: MouseEvent): boolean;
+    onMouseDown?(event: PointerEvent): boolean;
+    onMouseMove?(event: PointerEvent): boolean;
+    onMouseUp?(event: PointerEvent): void;
     onDblClick?(event: MouseEvent): boolean;
     onWheel?(event: WheelEvent): boolean;
+    onHover?(event: PointerEvent): void; 
 }
