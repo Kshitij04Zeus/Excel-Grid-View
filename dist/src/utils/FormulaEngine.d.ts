@@ -1,6 +1,6 @@
-import type { IFormulaEngine } from "../interfaces/IFormulaEngine";
+import type { IFormulaParser } from "../interfaces/IFormulaParser";
 import { DataStore } from "./DataStore";
-export declare class FormulaEngine implements IFormulaEngine {
+export declare class FormulaParser implements IFormulaParser {
     private dataStore;
     constructor(dataStore: DataStore);
     columnIndexToLetter(colIndex: number): string;
@@ -10,4 +10,4 @@ export declare class FormulaEngine implements IFormulaEngine {
     expandRange(rangeStr: string): string[];
     evaluate(value: string | null): number | string;
 }
-//# sourceMappingURL=FormulaEngine.d.ts.map
+//# sourceMappingURL=FormulaParser.d.ts.map

@@ -11,7 +11,7 @@ export declare class FormulaBarManager {
     private formulaEditingOldValue;
     private formulaEditingRow;
     private formulaEditingCol;
-    private formulaEngine;
+    private formulaParser;
     constructor(datastore: DataStore, selectionManager: SelectionManager, commandManager: CommandManager, onRenderRequired: () => void);
     private initUI;
     private commitFormulaEdit;

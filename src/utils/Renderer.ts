@@ -1,6 +1,7 @@
 import type { SelectionManager } from "../managers/SelectionManager";
 import { Constants } from "./Constants";
 import type { DataStore } from "./DataStore";
+import type { FormulaParser } from "./FormulaParser";
 import type { ViewPort } from "./ViewPort";
 
 export class Renderer {
@@ -9,7 +10,8 @@ export class Renderer {
         private readonly canvas: HTMLCanvasElement,
         private readonly datastore: DataStore,
         private readonly viewport: ViewPort,
-        private readonly selectionManager: SelectionManager
+        private readonly selectionManager: SelectionManager,
+        private readonly formulaParser:FormulaParser
     ) { }
 
     public render(): void {
@@ -76,13 +78,15 @@ export class Renderer {
                 }
 
                 const cellText = this.datastore.getCellValue(row.index, col.index);
+                const evaluatedVal = this.formulaParser.evaluate(cellText);
+
                 if (cellText !== "") {
                     const x = this.datastore.getColumnOffset(c) - scrollX;
                     this.ctx.save();
                     this.ctx.beginPath();
                     this.ctx.rect(x + 1, y + 1, col.width - 2, row.height - 2);
                     this.ctx.clip();
-                    this.ctx.fillText(cellText, x + 6, y + row.height / 2);
+                    this.ctx.fillText(evaluatedVal as string, x + 6, y + row.height / 2);
                     this.ctx.restore();
                 }
             }

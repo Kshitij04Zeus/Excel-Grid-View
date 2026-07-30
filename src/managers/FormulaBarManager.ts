@@ -2,8 +2,6 @@ import type { DataStore } from "../utils/DataStore";
 import type { SelectionManager } from "../managers/SelectionManager";
 import type { CommandManager } from "../commands/CommandManager";
 import { EditCellCommand } from "../commands/EditCellCommand";
-import { FormulaEngine } from "../utils/FormulaEngine";
-import type { IFormulaEngine } from "../interfaces/IFormulaEngine";
 
 export class FormulaBarManager {
     private addressBox!: HTMLDivElement;
@@ -12,7 +10,6 @@ export class FormulaBarManager {
     private formulaEditingOldValue: string | null = null;
     private formulaEditingRow = -1;
     private formulaEditingCol = -1;
-    private formulaEngine: IFormulaEngine;
 
     constructor(
         private readonly datastore: DataStore,
@@ -20,7 +17,6 @@ export class FormulaBarManager {
         private readonly commandManager: CommandManager,
         private readonly onRenderRequired: () => void
     ) {
-        this.formulaEngine = new FormulaEngine(this.datastore);
         this.initUI();
     }
 
@@ -66,10 +62,6 @@ export class FormulaBarManager {
 
         let newValue = this.formulaInput.value;
         const oldValue = this.formulaEditingOldValue;
-
-        if (newValue.startsWith("=")) {
-            newValue = this.formulaEngine.evaluate(newValue).toString();
-        }
 
         if (newValue !== oldValue) {
             this.datastore.setCellValue(this.formulaEditingRow, this.formulaEditingCol, newValue);

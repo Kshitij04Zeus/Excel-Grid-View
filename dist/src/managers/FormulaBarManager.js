@@ -1,5 +1,5 @@
 import { EditCellCommand } from "../commands/EditCellCommand";
-import { FormulaEngine } from "../utils/FormulaEngine";
+import { FormulaParser } from "../utils/FormulaParser";
 export class FormulaBarManager {
     datastore;
     selectionManager;
@@ -10,13 +10,13 @@ export class FormulaBarManager {
     formulaEditingOldValue = null;
     formulaEditingRow = -1;
     formulaEditingCol = -1;
-    formulaEngine;
+    formulaParser;
     constructor(datastore, selectionManager, commandManager, onRenderRequired) {
         this.datastore = datastore;
         this.selectionManager = selectionManager;
         this.commandManager = commandManager;
         this.onRenderRequired = onRenderRequired;
-        this.formulaEngine = new FormulaEngine(this.datastore);
+        this.formulaParser = new FormulaParser(this.datastore);
         this.initUI();
     }
     initUI() {
@@ -58,7 +58,7 @@ export class FormulaBarManager {
         let newValue = this.formulaInput.value;
         const oldValue = this.formulaEditingOldValue;
         if (newValue.startsWith("=")) {
-            newValue = this.formulaEngine.evaluate(newValue).toString();
+            newValue = this.formulaParser.evaluate(newValue).toString();
         }
         if (newValue !== oldValue) {
             this.datastore.setCellValue(this.formulaEditingRow, this.formulaEditingCol, newValue);

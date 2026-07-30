@@ -1,5 +1,5 @@
 import { DataStore } from "./DataStore";
-export class FormulaEngine {
+export class FormulaParser {
     dataStore;
     constructor(dataStore) {
         this.dataStore = dataStore;
@@ -89,4 +89,4 @@ export class FormulaEngine {
         }
     }
 }
-//# sourceMappingURL=FormulaEngine.js.map
+//# sourceMappingURL=FormulaParser.js.map

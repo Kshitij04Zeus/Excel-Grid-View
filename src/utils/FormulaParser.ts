@@ -1,7 +1,7 @@
-import type { IFormulaEngine } from "../interfaces/IFormulaEngine";
+import type { IFormulaParser } from "../interfaces/IFormulaParser";
 import { DataStore } from "./DataStore";
 
-export class FormulaEngine implements IFormulaEngine{
+export class FormulaParser implements IFormulaParser {
   private dataStore: DataStore;
 
   constructor(dataStore: DataStore) {
@@ -20,9 +20,7 @@ export class FormulaEngine implements IFormulaEngine{
     return letters;
   }
 
-
   public columnLetterToIndex(colLetter: string): number {
-
     let indRes = 0;
     for (let i = 0; i < colLetter.length; i++) {
       indRes *= 26;
@@ -32,14 +30,17 @@ export class FormulaEngine implements IFormulaEngine{
     return indRes - 1;
   }
 
-  // ex : A1 -> { row: 0, col: 0 }, B2 -> { row: 1, col: 1 }
   public indexToCellRef(rowInd: number, colInd: number): string {
     const colLetter: string = this.columnIndexToLetter(colInd);
     const rowNumber: number = rowInd + 1;
     return colLetter + rowNumber.toString();
   }
 
-  public getCellNumericValue(cellRef: string): number | null {
+  public getCellNumericValue(cellRef: string, visited: Set<string>): number | null {
+    if (visited.has(cellRef)) {
+      throw new Error("Circular Reference");
+    }
+
     const match = cellRef.match(/^([A-Z]+)([1-9]\d*)$/);
 
     if (!match) return null;
@@ -48,15 +49,25 @@ export class FormulaEngine implements IFormulaEngine{
     const colIndex = this.columnLetterToIndex(colLetter!);
     const rowIndex = parseInt(match[2]!, 10) - 1;
 
-    const rawValue = this.dataStore.getCellValue(rowIndex, colIndex);
+    visited.add(cellRef);
 
-    const evaluatedValue = this.evaluate(rawValue);
+    try {
+      const rawValue = this.dataStore.getCellValue(rowIndex, colIndex);
+      const evaluatedValue = this.evaluate(rawValue, visited);
 
-    const numValue = typeof evaluatedValue === 'number' ? evaluatedValue : parseFloat(evaluatedValue);
-    return isNaN(numValue) ? null : numValue;
+      if (evaluatedValue === "#REF!") {
+        throw new Error("Circular Reference");
+      }
+      if (evaluatedValue === "#ERR") {
+        throw new Error("Formula Error");
+      }
+
+      const numValue = typeof evaluatedValue === 'number' ? evaluatedValue : parseFloat(evaluatedValue);
+      return isNaN(numValue) ? null : numValue;
+    } finally {
+      visited.delete(cellRef);
+    }
   }
-
-
 
   public expandRange(rangeStr: string): string[] {
     const [start, end] = rangeStr.split(':');
@@ -82,37 +93,38 @@ export class FormulaEngine implements IFormulaEngine{
     return refs;
   }
 
-  // ex : =A1+B2 -> 30, =A1*B2 -> 200, =A1-B2 -> -10, =A1/B2 -> 0.5
-  public evaluate(value: string | null): number | string {
+  public evaluate(value: string | null, visited: Set<string> = new Set()): number | string {
     if (typeof value !== "string" || !value.startsWith("=")) {
       return value ?? "";
     }
 
     let expression = value.slice(1).toUpperCase();
 
-    // handle SUM(range) first, e.g. SUM(A1:A5)
-    // whole gives -> SUM(A1:A5), rangeStr gives -> A1:A5
-    expression = expression.replace(
-      /SUM\(([A-Z0-9:]+)\)/g,
-      (whole, rangeStr) => {
-        const refs: string[] = this.expandRange(rangeStr);
+    try {
+      expression = expression.replace(
+        /SUM\(([A-Z0-9:]+)\)/g,
+        (whole, rangeStr) => {
+          const refs: string[] = this.expandRange(rangeStr);
 
-        // ignore non-numeric values in the range
-        const total = refs.reduce(
-          (sum, ref) => sum + (this.getCellNumericValue(ref) ?? 0),
-          0,
-        );
+          const total = refs.reduce(
+            (sum, ref) => sum + (this.getCellNumericValue(ref, visited) ?? 0),
+            0,
+          );
 
-        return total.toString();
-      },
-    );
+          return total.toString();
+        },
+      );
 
+      expression = expression.replace(/[A-Z]+\d+/g, (ref) => 
+        (this.getCellNumericValue(ref, visited) ?? 0).toString()
+      );
+    } catch (e) {
+      if (e instanceof Error && e.message === "Circular Reference") {
+        return "#REF!";
+      }
+      return "#ERR";
+    }
 
-    // handle remaining cell references, e.g. A1, B2, etc while ignoring non-numeric values
-    expression = expression.replace(/[A-Z]+\d+/g, (ref) => (this.getCellNumericValue(ref) ?? 0).toString());
-
-
-    // safety check: only numbers/operators/parentheses are allowed before we evaluate the expression
     if (!/^[0-9+\-*/().\s]+$/.test(expression)) {
       return '#ERR';
     }

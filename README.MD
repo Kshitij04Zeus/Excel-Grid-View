@@ -57,7 +57,7 @@ src/
 │   └── ResizeRowCommand.ts
 ├── interfaces/
 │   ├── IDataStore.ts
-│   ├── IFormulaEngine.ts
+│   ├── IFormulaParser.ts
 │   └── IMouseHandler.ts
 ├── managers/
 │   ├── mouseHandlers/
@@ -86,7 +86,7 @@ src/
 ├── utils/
 │   ├── Constants.ts
 │   ├── DataStore.ts
-│   ├── FormulaEngine.ts
+│   ├── FormulaParser.ts
 │   ├── generate-data.ts
 │   ├── Grid.ts
 │   ├── Renderer.ts
@@ -108,14 +108,14 @@ Examples:
 - DataStore manages all spreadsheet data.
 - Renderer is responsible only for rendering.
 - SelectionManager manages selection state.
-- FormulaEngine performs only formula evaluation.
+- FormulaParser performs only formula evaluation.
   
 ## Abstraction
  
 Interfaces abstract implementation details.
  
 Examples:
- - IFormulaEngine
+ - IFormulaParser
 - IMouseHandler
  
 This allows different implementations without affecting dependent classes.
@@ -168,7 +168,7 @@ Each class has one clearly defined responsibility.
 Examples:
  
 - Renderer only renders.
-- FormulaEngine only evaluates formulas.
+- FormulaParser only evaluates formulas.
 - SelectionManager only manages selections.
 - StatusBarManager only updates status information.
   
@@ -194,7 +194,7 @@ Interfaces remain focused.
  
 Examples:
 - IMouseHandler
-- IFormulaEngine
+- IFormulaParser
  
 No class is forced to implement unnecessary methods.
   

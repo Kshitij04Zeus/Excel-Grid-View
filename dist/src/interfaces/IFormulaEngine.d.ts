@@ -1,4 +1,4 @@
-export interface IFormulaEngine {
+export interface IFormulaParser {
     columnIndexToLetter(colIndex: number): string;
     columnLetterToIndex(colLetter: string): number;
     indexToCellRef(rowInd: number, colInd: number): string;
@@ -6,4 +6,4 @@ export interface IFormulaEngine {
     expandRange(rangeStr: string): string[];
     evaluate(value: string | null): number | string;
 }
-//# sourceMappingURL=IFormulaEngine.d.ts.map
+//# sourceMappingURL=IFormulaParser.d.ts.map
